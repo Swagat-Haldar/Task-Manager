@@ -50,22 +50,25 @@ def login(
         user.id, expires_delta=access_token_expires
     )
     
+    is_prod = settings.ENVIRONMENT == "production"
+    
     response.set_cookie(
         key="access_token",
         value=access_token,
         httponly=True,
         max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
-        samesite="none",
-        secure=True, # Required for samesite="none"
+        samesite="none" if is_prod else "lax",
+        secure=is_prod,
     )
     return {"message": "Successfully logged in"}
 
 @router.post("/logout")
 def logout(response: Response):
+    is_prod = settings.ENVIRONMENT == "production"
     response.delete_cookie(
         "access_token",
-        samesite="none",
-        secure=True
+        samesite="none" if is_prod else "lax",
+        secure=is_prod
     )
     return {"message": "Successfully logged out"}
 
