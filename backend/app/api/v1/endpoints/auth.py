@@ -55,15 +55,18 @@ def login(
         value=access_token,
         httponly=True,
         max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
-        expires=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
-        samesite="lax",
-        secure=False,  # Set to True in production with HTTPS
+        samesite="none",
+        secure=True, # Required for samesite="none"
     )
     return {"message": "Successfully logged in"}
 
 @router.post("/logout")
 def logout(response: Response):
-    response.delete_cookie("access_token")
+    response.delete_cookie(
+        "access_token",
+        samesite="none",
+        secure=True
+    )
     return {"message": "Successfully logged out"}
 
 @router.get("/me", response_model=User)
