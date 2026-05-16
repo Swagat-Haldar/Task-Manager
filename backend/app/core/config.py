@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     FRONTEND_URL: str = "http://localhost:3000"
     
+    @property
+    def is_production(self) -> bool:
+        return self.ENVIRONMENT.lower() == "production"
+    
     # CORS - Use Any to stop Pydantic from forcing JSON parsing on env vars
     BACKEND_CORS_ORIGINS: Any = ["http://localhost:3000"]
 

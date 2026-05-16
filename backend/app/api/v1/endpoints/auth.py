@@ -50,7 +50,7 @@ def login(
         user.id, expires_delta=access_token_expires
     )
     
-    is_prod = settings.ENVIRONMENT == "production"
+    is_prod = settings.is_production
     
     response.set_cookie(
         key="access_token",
@@ -65,7 +65,7 @@ def login(
 
 @router.post("/logout")
 def logout(response: Response):
-    is_prod = settings.ENVIRONMENT == "production"
+    is_prod = settings.is_production
     response.delete_cookie(
         "access_token",
         samesite="none" if is_prod else "lax",
