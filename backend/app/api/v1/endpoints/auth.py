@@ -59,6 +59,7 @@ def login(
         max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         samesite="none" if is_prod else "lax",
         secure=is_prod,
+        path="/",
     )
     return {"message": "Successfully logged in"}
 
