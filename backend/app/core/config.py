@@ -1,3 +1,4 @@
+import json
 from pydantic_settings import BaseSettings
 from typing import List, Union, Any
 from pydantic import field_validator
@@ -9,17 +10,22 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
     
-    # CORS - Use Union to prevent Pydantic from forcing JSON parsing on env vars
-    BACKEND_CORS_ORIGINS: Union[List[str], str] = ["http://localhost:3000"]
+    # CORS - Always returns a list
+    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000"]
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
     @classmethod
-    def assemble_cors_origins(cls, v: Any) -> Union[List[str], str]:
+    def assemble_cors_origins(cls, v: Any) -> List[str]:
         if isinstance(v, str) and not v.startswith("["):
-            return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
+            return [i.strip() for i in v.split(",") if i.strip()]
+        elif isinstance(v, str) and v.startswith("["):
+            try:
+                return json.loads(v)
+            except Exception:
+                return []
+        elif isinstance(v, list):
             return v
-        return v
+        return []
     
     # Database
     DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/team_task_manager"
