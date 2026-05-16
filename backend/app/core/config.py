@@ -10,8 +10,8 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
     
-    # CORS - Always returns a list
-    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000"]
+    # CORS - Use Any to stop Pydantic from forcing JSON parsing on env vars
+    BACKEND_CORS_ORIGINS: Any = ["http://localhost:3000"]
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
     @classmethod
