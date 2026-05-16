@@ -21,7 +21,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 export default function DashboardPage() {
+  const { user, loading } = useAuth();
   const router = useRouter();
+  const [stats, setStats] = useState(null);
+  const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
     if (!loading && !user) {
