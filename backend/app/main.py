@@ -5,6 +5,11 @@ from app.core.config import settings
 from app.api.v1.router import api_router
 import logging
 import traceback
+import bcrypt
+
+# Fix for passlib/bcrypt compatibility issue
+if not hasattr(bcrypt, "__about__"):
+    bcrypt.__about__ = type("About", (object,), {"__version__": bcrypt.__version__})
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
