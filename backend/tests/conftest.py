@@ -3,6 +3,11 @@ from typing import Generator
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from app.core.config import settings
+
+# Force ENVIRONMENT to testing to prevent secure-only cookie blocking in local test client
+settings.ENVIRONMENT = "testing"
+
 from app.main import app
 from app.api.deps import get_db
 from app.db.base_class import Base
